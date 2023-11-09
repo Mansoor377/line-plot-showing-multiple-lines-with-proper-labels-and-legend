@@ -1,0 +1,23 @@
+# we want to plot a few curves, we need matplotlib.pyplot
+import matplotlib.pyplot as plt
+
+# if I understand, the following is "like" your real data:
+#   a label, a year and a value — comma separated
+data = 'A,2018,7\nB,2019,4\nA,2020,5\nA,2021,6\nB,2022,8\nB,2023,9'
+
+# the following is an idiomatic way to group the data points
+# according to the labels — note converting year and value to integers
+d = {}
+for label, *yv in (line.split(',') for line in data.splitlines()):
+    d.setdefault(label, []).append([int(n) for n in yv])
+
+# loop over labels, plotting the transposed "zip(*" and sorted list
+for label, list_yv in d.items():
+    plt.plot(*zip(*sorted(list_yv)), '-*', label=label)
+
+# fix the tick position on time axis
+plt.gca().xaxis.set_major_locator(plt.MultipleLocator(1.0))
+
+# the legend, and show the result
+plt.legend()
+plt.show()
